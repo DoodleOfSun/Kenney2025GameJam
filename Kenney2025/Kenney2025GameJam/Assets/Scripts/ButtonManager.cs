@@ -20,10 +20,6 @@ public class ButtonManager : MonoBehaviour
     {
         clickSound.Play();
         SceneManager.LoadScene(1);
-
-        GameObject clickedObj = EventSystem.current.currentSelectedGameObject;
-        Debug.Log("클릭된 버튼: " + clickedObj.name);
-
     }
 
     public void ExitGame()
