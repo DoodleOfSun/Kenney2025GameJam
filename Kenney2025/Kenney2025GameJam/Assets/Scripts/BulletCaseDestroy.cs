@@ -3,15 +3,20 @@ using System.Collections;
 
 public class BulletCaseDestroy : MonoBehaviour
 {
+    private Rigidbody rb;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        DestroyByTime();
+        rb = GetComponent<Rigidbody>();
+
+        // X,Y로 양의 방향 (오른쪽대각선)
+        rb.AddForce(new Vector3(5, 2.5f, this.transform.position.z), ForceMode.Impulse);
+        StartCoroutine(DestroyByTime());
     }
 
     private IEnumerator DestroyByTime()
     {
-        yield return new WaitForSeconds(3);
-        Destroy(this);
+        yield return new WaitForSeconds(3f);
+        Destroy(gameObject);
     }
 }

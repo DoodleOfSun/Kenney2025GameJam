@@ -6,37 +6,34 @@ using UnityEngine.EventSystems;
 
 public class ButtonManager : MonoBehaviour
 {
-    private AudioSource clickSound;
-
     public GameObject optionPanel;
 
     void Start()
     {
-        clickSound = GameObject.Find("SFXSource").GetComponent<AudioSource>();
         optionPanel.SetActive(false);
     }
 
     public void GameScene()
     {
-        clickSound.Play();
+        AudioManager.instance.ClickSound();
         SceneManager.LoadScene(1);
     }
 
     public void ExitGame()
     {
-        clickSound.Play();
+        AudioManager.instance.ClickSound();
         Application.Quit();
     }
 
     public void OpenOption()
     {
-        clickSound.Play();
+        AudioManager.instance.ClickSound();
         optionPanel.SetActive(true);
     }
 
     public void CloseOption()
     {
-        clickSound.Play();
+        AudioManager.instance.ClickSound();
         optionPanel.SetActive(false);
     }
 

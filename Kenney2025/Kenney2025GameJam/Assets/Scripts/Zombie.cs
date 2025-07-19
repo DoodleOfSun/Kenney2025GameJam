@@ -7,16 +7,17 @@ public class Zombie : MonoBehaviour
 {
     public float attackDistance;
     public GameObject player;
+    public GameObject attackBox;
     private NavMeshAgent nav;
     private Animator animator;
-    private BoxCollider boxCollider;
     private Coroutine attackCoroutine;
+    private bool isAttack;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         nav = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        boxCollider = GetComponent<BoxCollider>();
+        attackBox.SetActive(false);
         attackCoroutine = null;
     }
 
@@ -45,19 +46,13 @@ public class Zombie : MonoBehaviour
     {
         int attackAni = Random.Range(1, 3);
         animator.SetInteger("AttackType", attackAni);
-
-        boxCollider.enabled = true;
+        nav.isStopped = true;
+        attackBox.SetActive (true);
         yield return new WaitForSeconds(1.4f);
-        boxCollider.enabled = false;
+        attackBox.SetActive(false);
+        animator.SetInteger("AttackType", 0);
+        nav.isStopped = false;
         attackCoroutine = null;
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent<BoxCollider>(out var box) && other.name.Contains("Player"))
-        {
-            Debug.Log("플레이어 감지됨! (트리거)");
-        }
     }
 
 }

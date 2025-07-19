@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -34,7 +35,7 @@ public class Player : MonoBehaviour
 
         animator = this.GetComponent<Animator>();
         rb = this.GetComponent<Rigidbody>();
-
+        fireCoroutine = null;
         speedOrigin = speed;
     }
 
@@ -42,6 +43,7 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
         MouseControl();
         RotateByMouse(); 
     }
@@ -52,11 +54,10 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
             LocomotionAnimStop();
-            Debug.Log("조준");
             animator.SetBool("Aiming", true);
 
             speed = 0;
-            if (Input.GetMouseButtonDown(0) && fireCoroutine == null)
+            if (Input.GetMouseButton(0) && fireCoroutine == null)
             {
                 Debug.Log("발사");
                 fireCoroutine = StartCoroutine(FiringCoroutine());
@@ -138,9 +139,10 @@ public class Player : MonoBehaviour
     private IEnumerator FiringCoroutine()
     {
         FireBulletByPower();
+        yield return new WaitForSeconds(0.3f);
         FireBulletCase();
         // 총 소리 필요함
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.5f);
         fireCoroutine = null;
     }
 
