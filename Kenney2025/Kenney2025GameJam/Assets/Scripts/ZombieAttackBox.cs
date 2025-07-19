@@ -8,6 +8,7 @@ public class ZombieAttackBox : MonoBehaviour
         if (other.TryGetComponent<BoxCollider>(out var box) && other.tag.Contains("Player"))
         {
             Debug.Log("플레이어 감지됨! (트리거)");
+            Player.Instance.Damaged();
         }
     }
 }

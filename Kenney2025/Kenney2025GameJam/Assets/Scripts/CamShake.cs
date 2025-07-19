@@ -5,7 +5,7 @@ using System.Collections;
 public class CamShake : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    [HideInInspector] public CamShake instance;
+    public static CamShake instance;
     private Vector3 originPos;
     private Coroutine shakeCoroutine;
     private bool isShake;
@@ -34,21 +34,21 @@ public class CamShake : MonoBehaviour
         //    shakeCoroutine = StartCoroutine(ShakeCam());
         //}
 
-        //if (isShake)
-        //{
-        //    transform.position = Random.insideUnitSphere * 1f + originPos;
-        //}
-        //else
-        //{
-        //    transform.position = originPos;
-        //}
+        if (isShake)
+        {
+            transform.position = Random.insideUnitSphere * 1f + originPos;
+        }
+        else
+        {
+            transform.position = originPos;
+        }
     }
 
-    private IEnumerator ShakeCam()
+    public IEnumerator ShakeCam()
     {
-        yield return new WaitForSeconds(2.5f);
         isShake = true;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.5f);
+        transform.position = originPos; 
         isShake = false;
         shakeCoroutine = null;
     }

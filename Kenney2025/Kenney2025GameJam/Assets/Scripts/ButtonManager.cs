@@ -25,14 +25,29 @@ public class ButtonManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void GoBackToMainScene()
+    {
+        AudioManager.instance.ClickSound();
+        SceneManager.LoadScene(0);
+    }
+
+    public void RestartScene()
+    {
+        Time.timeScale = 1f;
+        AudioManager.instance.ClickSound();
+        SceneManager.LoadScene(1);
+    }
+
     public void OpenOption()
     {
+        Time.timeScale = 0f;
         AudioManager.instance.ClickSound();
         optionPanel.SetActive(true);
     }
 
     public void CloseOption()
     {
+        Time.timeScale = 1f;
         AudioManager.instance.ClickSound();
         optionPanel.SetActive(false);
     }

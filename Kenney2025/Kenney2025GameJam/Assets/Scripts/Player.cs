@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     public GameObject bullet;
     public GameObject bulletCase;
 
+    public GameObject resultPanel;
+
     public float speed;
     private float speedOrigin;  // Saving Original Speed of Player. Do not Init or change that
 
@@ -37,6 +39,7 @@ public class Player : MonoBehaviour
         rb = this.GetComponent<Rigidbody>();
         fireCoroutine = null;
         speedOrigin = speed;
+        resultPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -44,8 +47,19 @@ public class Player : MonoBehaviour
     {
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+
+        if(!Input.GetMouseButton(1))
+        {
+            animator.SetBool("Aiming", false);
+            speed = speedOrigin;
+            Moving();
+        }
+    }
+
+    void Update()
+    {
         MouseControl();
-        RotateByMouse(); 
+        RotateByMouse();
     }
 
     private void MouseControl()
@@ -57,18 +71,11 @@ public class Player : MonoBehaviour
             animator.SetBool("Aiming", true);
 
             speed = 0;
-            if (Input.GetMouseButton(0) && fireCoroutine == null)
+            if (Input.GetMouseButtonDown(0) && fireCoroutine == null)
             {
                 Debug.Log("¹ß»ç");
                 fireCoroutine = StartCoroutine(FiringCoroutine());
             }
-        }
-
-        else
-        {
-            animator.SetBool("Aiming", false);
-            speed = speedOrigin;
-            Moving();
         }
     }
 
@@ -128,31 +135,59 @@ public class Player : MonoBehaviour
     {
         if (power <= 0)
         {
-            //empty
+            power = 0;
+            Time.timeScale = 0f;
+            resultPanel.SetActive(true);
+            // °ÔÀÓ¿À¹ö
         }
         else
         {
-            power--;
+            power = power - 10;
+            if (power < 0)
+            {
+                power = 0;
+            }
         }
     }
 
     private IEnumerator FiringCoroutine()
     {
         FireBulletByPower();
-        yield return new WaitForSeconds(0.3f);
+        AudioManager.instance.ShotgunFire();
+        yield return new WaitForSeconds(0.7f);
         FireBulletCase();
-        // ÃÑ ¼Ò¸® ÇÊ¿äÇÔ
+        AudioManager.instance.ShotgunPumping();
+        StartCoroutine(AudioManager.instance.ShotgunShallDrop());
+
         yield return new WaitForSeconds(0.5f);
+        Debug.Log("¼¦°Ç ÁØºñµÊ");
         fireCoroutine = null;
     }
 
     private void FireBulletByPower()
     {
-        Instantiate(bullet, blaster.transform.position, Quaternion.identity);
+        if (power <= 0)
+        {
+            Instantiate(bullet, blaster.transform.position, Quaternion.identity);
+        }
+        else
+        {
+            for (int i = 0; i < power; i++)
+            {
+                Instantiate(bullet, blaster.transform.position, Quaternion.identity);
+            }
+        }
     }
 
     private void FireBulletCase()
     {
+        Debug.Log("ÅºÇÇ ¶³¾îÁü");
         Instantiate(bulletCase, blaster.transform.position, Quaternion.identity);
+    }
+
+    public void PowerUp()
+    {
+        int randomWindow = Random.Range(1, 10);
+        power += randomWindow;
     }
 }

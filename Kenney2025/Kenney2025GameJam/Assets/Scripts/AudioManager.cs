@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -13,7 +14,10 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
 
     private AudioSource BGMSource;
-    private AudioSource SFXSource;
+    private AudioSource SFXSource1;
+    private AudioSource SFXSource2;
+    private AudioSource SFXSource3;
+    private AudioSource SFXSource4;
     private Slider BGMSlider;
     private Slider SFXSlider;
     public float bgmVolume = 1.0f;
@@ -36,9 +40,12 @@ public class AudioManager : MonoBehaviour
 
 
         BGMSource = GameObject.Find("BGMSource").GetComponent<AudioSource>();
-        SFXSource = GameObject.Find("SFXSource").GetComponent<AudioSource>();
+        SFXSource1 = GameObject.Find("SFXSource1").GetComponent<AudioSource>();
+        SFXSource2 = GameObject.Find("SFXSource2").GetComponent<AudioSource>();
+        SFXSource3 = GameObject.Find("SFXSource3").GetComponent<AudioSource>();
+        SFXSource4 = GameObject.Find("SFXSource4").GetComponent<AudioSource>();
 
-        BGMSlider = GameObject.Find("Slider_BGM").GetComponent <Slider>();
+        BGMSlider = GameObject.Find("Slider_BGM").GetComponent<Slider>();
         SFXSlider = GameObject.Find("Slider_SFX").GetComponent<Slider>();
         DontDestroyOnLoad(this);
     }
@@ -47,7 +54,10 @@ public class AudioManager : MonoBehaviour
     void Update()
     {
         BGMSource.volume = BGMSlider.value;
-        SFXSource.volume = SFXSlider.value;
+        SFXSource1.volume = SFXSlider.value;
+        SFXSource2.volume = SFXSlider.value;
+        SFXSource3.volume = SFXSlider.value;
+        SFXSource4.volume = SFXSlider.value;
     }
 
     public void BGM()
@@ -58,25 +68,27 @@ public class AudioManager : MonoBehaviour
 
     public void ClickSound()
     {
-        SFXSource.clip = SFXClipList[0];
-        SFXSource.Play();
+        SFXSource1.clip = SFXClipList[0];
+        SFXSource1.Play();
     }
 
     public void ShotgunFire()
     {
-        SFXSource.clip = SFXClipList[1];
-        SFXSource.Play();
+        SFXSource2.clip = SFXClipList[1];
+        SFXSource2.Play();
     }
 
     public void ShotgunPumping()
     {
-        SFXSource.clip = SFXClipList[2];
-        SFXSource.Play();
+        SFXSource3.clip = SFXClipList[2];
+        SFXSource3.Play();
     }
 
-    public void ShotgunShallDrop()
+    public IEnumerator ShotgunShallDrop()
     {
-        SFXSource.clip = SFXClipList[3];
-        SFXSource.Play();
+        SFXSource4.clip = SFXClipList[3];
+        SFXSource4.Play();
+        yield return new WaitForSeconds(2f);
+        SFXSource4.Stop();
     }
 }
