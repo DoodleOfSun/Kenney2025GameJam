@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/StartScene.unity
     guid: bdfc48c8be671d94b8b754840db3f78c
   - enabled: 1
-    path: Assets/Scenes/GameScene.unity
-    guid: e90b164949b2efe4c8e47b20595f3c3d
+    path: Assets/Scenes/Market.unity
+    guid: e2c967ab125fffc43b4ccdcdbbe165fc
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

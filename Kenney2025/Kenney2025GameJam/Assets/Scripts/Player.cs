@@ -11,8 +11,7 @@ public class Player : MonoBehaviour
     public GameObject blaster;
     public GameObject bullet;
     public GameObject bulletCase;
-
-    public GameObject resultPanel;
+    public GameObject mine;
 
     public float speed;
     private float speedOrigin;  // Saving Original Speed of Player. Do not Init or change that
@@ -39,7 +38,6 @@ public class Player : MonoBehaviour
         rb = this.GetComponent<Rigidbody>();
         fireCoroutine = null;
         speedOrigin = speed;
-        resultPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -48,7 +46,7 @@ public class Player : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        if(!Input.GetMouseButton(1))
+        if(!Input.GetMouseButton(1) && !Input.GetMouseButtonDown(0))
         {
             animator.SetBool("Aiming", false);
             speed = speedOrigin;
@@ -60,6 +58,7 @@ public class Player : MonoBehaviour
     {
         MouseControl();
         RotateByMouse();
+        Mine();
     }
 
     private void MouseControl()
@@ -69,8 +68,6 @@ public class Player : MonoBehaviour
         {
             LocomotionAnimStop();
             animator.SetBool("Aiming", true);
-
-            speed = 0;
             if (Input.GetMouseButtonDown(0) && fireCoroutine == null)
             {
                 Debug.Log("발사");
@@ -136,8 +133,7 @@ public class Player : MonoBehaviour
         if (power <= 0)
         {
             power = 0;
-            Time.timeScale = 0f;
-            resultPanel.SetActive(true);
+            GameManagerForGameScene.instance.GameEnded();
             // 게임오버
         }
         else
@@ -189,5 +185,15 @@ public class Player : MonoBehaviour
     {
         int randomWindow = Random.Range(1, 10);
         power += randomWindow;
+    }
+
+    private void Mine()
+    {
+        if (Input.GetButtonDown("Jump") && power >= 10)
+        {
+            Debug.Log("스페이스바 눌림");
+            Damaged();
+            Instantiate(mine, transform.position, Quaternion.Euler(0, 0, 90));
+        }
     }
 }

@@ -8,7 +8,7 @@ public class Zombie : MonoBehaviour
 {
     public float attackDistance;
     public GameObject powerUp;
-    public GameObject player;
+    public GameObject target;
     public GameObject attackBox;
     private NavMeshAgent nav;
     private Animator animator;
@@ -21,6 +21,7 @@ public class Zombie : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        target = GameObject.Find("Survivor_Player");
         nav = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         attackBox.SetActive(false);
@@ -45,19 +46,19 @@ public class Zombie : MonoBehaviour
 
 
         // 공격 범위 외일 경우 추격
-        if (Vector3.Distance(transform.position, player.transform.position) > attackDistance && !nav.isStopped)
+        if (Vector3.Distance(transform.position, target.transform.position) > attackDistance && !nav.isStopped)
         {
-            nav.ResetPath();
             animator.SetInteger("AttackType", 0);
             animator.SetFloat("Speed", nav.velocity.magnitude);
             nav.stoppingDistance = attackDistance;
-            nav.destination = player.transform.position;
+            nav.destination = target.transform.position;
         }
 
         // 공격 범위 안일 경우 공격 애니메이션 재생
-        else if (Vector3.Distance(transform.position, player.transform.position) <= attackDistance 
+        else if (Vector3.Distance(transform.position, target.transform.position) <= attackDistance 
             && attackCoroutine == null && attackBox != null)
         {
+            nav.ResetPath();
             attackCoroutine = StartCoroutine(Attack());
         }
     }
@@ -81,7 +82,10 @@ public class Zombie : MonoBehaviour
 
     private IEnumerator Die()
     {
+        BoxCollider box = GetComponent<BoxCollider>();
+        box.enabled = false;
         nav.isStopped = true;
+        hpBar.enabled = false;
         //nav.enabled = false;
         GameManagerForGameScene.instance.killCount++;
         animator.SetTrigger("Die");

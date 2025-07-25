@@ -1,4 +1,3 @@
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using System.Collections;
 
@@ -7,7 +6,6 @@ public class CamShake : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public static CamShake instance;
     private Vector3 originPos;
-    private Coroutine shakeCoroutine;
     private bool isShake;
     // Start is called before the first frame update
     void Start()
@@ -22,7 +20,6 @@ public class CamShake : MonoBehaviour
         }
 
         originPos = transform.position;
-        shakeCoroutine = null;
         isShake = false;
     }
 
@@ -50,6 +47,5 @@ public class CamShake : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         transform.position = originPos; 
         isShake = false;
-        shakeCoroutine = null;
     }
 }

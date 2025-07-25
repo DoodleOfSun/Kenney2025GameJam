@@ -7,10 +7,31 @@ using UnityEngine.EventSystems;
 public class ButtonManager : MonoBehaviour
 {
     public GameObject optionPanel;
+    public Slider BGMSlider;
+    public Slider SFXSlider;
 
     void Start()
     {
         optionPanel.SetActive(false);
+        int currentSceneIndex = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
+
+        if (currentSceneIndex == 1)
+        {
+            optionPanel.SetActive(true);
+
+            GameObject bgmObj = GameObject.Find("Slider_BGM");
+            if (bgmObj != null && bgmObj.GetComponent<Slider>() != null)
+                BGMSlider = bgmObj.GetComponent<Slider>();
+
+            GameObject sfxObj = GameObject.Find("Slider_SFX");
+            if (sfxObj != null && sfxObj.GetComponent<Slider>() != null)
+                SFXSlider = sfxObj.GetComponent<Slider>();
+
+
+            BGMSlider.value = AudioManager.instance.BGMSource.volume;
+            SFXSlider.value = AudioManager.instance.SFXSource1.volume;
+            optionPanel.SetActive(false);
+        }
     }
 
     public void GameScene()
@@ -35,7 +56,9 @@ public class ButtonManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         AudioManager.instance.ClickSound();
-        SceneManager.LoadScene(1);
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.name);
+
     }
 
     public void OpenOption()

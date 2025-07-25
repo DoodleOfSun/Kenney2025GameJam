@@ -11,10 +11,11 @@ public class GameManagerForGameScene : MonoBehaviour
 
     public Text playerPowerText;
     public Text playerScoreText;
+    public Text leftZombieText;
     public int playerScore;
     public int killCount;
 
-
+    public GameObject resultPanel;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,11 +32,17 @@ public class GameManagerForGameScene : MonoBehaviour
         }
         playerScore = 0;
         killCount = 0;
+        resultPanel.SetActive(false);
     }
 
     // Update is called once per frame
     void LateUpdate()
     {
+        if (killCount >= 100)
+        {
+            GameEnded();
+        }
+
         Toggle();
         InitText();
     }
@@ -56,6 +63,7 @@ public class GameManagerForGameScene : MonoBehaviour
     {
         playerPowerText.text = "Power : " + Player.Instance.power.ToString();
         playerScoreText.text = "Score : " + playerScore.ToString();
+        leftZombieText.text = "Zombies Left : " + (100 - killCount).ToString();
     }
 
     public int powerScore()
@@ -66,5 +74,13 @@ public class GameManagerForGameScene : MonoBehaviour
     public int killScore()
     {
         return killCount * 1500;
+    }
+
+    public void GameEnded()
+    {
+        AudioManager.instance.AllSourceStop();
+        CamFollow.instance.isShake = false;
+        Time.timeScale = 0f;
+        resultPanel.SetActive(true);
     }
 }

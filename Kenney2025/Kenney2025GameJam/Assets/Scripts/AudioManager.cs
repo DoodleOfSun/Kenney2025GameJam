@@ -13,15 +13,14 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
 
-    private AudioSource BGMSource;
-    private AudioSource SFXSource1;
+    public AudioSource BGMSource;
+    public AudioSource SFXSource1;
     private AudioSource SFXSource2;
     private AudioSource SFXSource3;
     private AudioSource SFXSource4;
-    private Slider BGMSlider;
-    private Slider SFXSlider;
-    public float bgmVolume = 1.0f;
-    public float sfxVolume = 1.0f;
+    private AudioSource SFXSource5;
+    public Slider BGMSlider;
+    public Slider SFXSlider;
 
     public AudioClip bgmClip;
     public List<AudioClip> SFXClipList = new List<AudioClip>();
@@ -44,20 +43,36 @@ public class AudioManager : MonoBehaviour
         SFXSource2 = GameObject.Find("SFXSource2").GetComponent<AudioSource>();
         SFXSource3 = GameObject.Find("SFXSource3").GetComponent<AudioSource>();
         SFXSource4 = GameObject.Find("SFXSource4").GetComponent<AudioSource>();
+        SFXSource5 = GameObject.Find("SFXSource5").GetComponent<AudioSource>();
 
         BGMSlider = GameObject.Find("Slider_BGM").GetComponent<Slider>();
         SFXSlider = GameObject.Find("Slider_SFX").GetComponent<Slider>();
+
+        BGMSource.Play();
         DontDestroyOnLoad(this);
     }
 
     // Update is called once per frame
     void Update()
     {
-        BGMSource.volume = BGMSlider.value;
-        SFXSource1.volume = SFXSlider.value;
-        SFXSource2.volume = SFXSlider.value;
-        SFXSource3.volume = SFXSlider.value;
-        SFXSource4.volume = SFXSlider.value;
+        GameObject bgmObj = GameObject.Find("Slider_BGM");
+        if (bgmObj != null && bgmObj.GetComponent<Slider>() != null)
+        {
+
+            BGMSlider = bgmObj.GetComponent<Slider>();
+            BGMSource.volume = BGMSlider.value;
+        }
+
+        GameObject sfxObj = GameObject.Find("Slider_SFX");
+        if (sfxObj != null && sfxObj.GetComponent<Slider>() != null)
+        {
+            SFXSlider = sfxObj.GetComponent<Slider>();
+            SFXSource1.volume = SFXSlider.value;
+            SFXSource2.volume = SFXSlider.value;
+            SFXSource3.volume = SFXSlider.value;
+            SFXSource4.volume = SFXSlider.value;
+            SFXSource5.volume = SFXSlider.value;
+        }
     }
 
     public void BGM()
@@ -90,5 +105,22 @@ public class AudioManager : MonoBehaviour
         SFXSource4.Play();
         yield return new WaitForSeconds(2f);
         SFXSource4.Stop();
+    }
+
+    public void MineExplosion()
+    {
+        SFXSource5.clip = SFXClipList[4];
+        SFXSource5.Play();
+    }
+
+    public void AllSourceStop()
+    {
+        BGMSource.Stop();
+        SFXSource1.Stop();
+        SFXSource2.Stop();
+        SFXSource3.Stop();
+        SFXSource4.Stop();
+        SFXSource5.Stop();
+
     }
 }
