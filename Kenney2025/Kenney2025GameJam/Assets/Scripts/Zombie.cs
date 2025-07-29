@@ -97,8 +97,8 @@ public class Zombie : MonoBehaviour
 
     private void RandomPowerUpDrop()
     {
-        int randomWindow = Random.Range (1, 3);
-        if (randomWindow == 2)
+        int randomWindow = Random.Range (0, 10);
+        if (randomWindow <= 7)
         {
             Instantiate(powerUp, this.transform.position, Quaternion.identity);
         }

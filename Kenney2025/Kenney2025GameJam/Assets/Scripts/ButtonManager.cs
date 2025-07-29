@@ -48,6 +48,7 @@ public class ButtonManager : MonoBehaviour
 
     public void GoBackToMainScene()
     {
+        Time.timeScale = 1f;
         AudioManager.instance.ClickSound();
         SceneManager.LoadScene(0);
     }

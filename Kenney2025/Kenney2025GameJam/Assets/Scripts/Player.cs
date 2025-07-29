@@ -70,7 +70,6 @@ public class Player : MonoBehaviour
             animator.SetBool("Aiming", true);
             if (Input.GetMouseButtonDown(0) && fireCoroutine == null)
             {
-                Debug.Log("발사");
                 fireCoroutine = StartCoroutine(FiringCoroutine());
             }
         }
@@ -80,30 +79,21 @@ public class Player : MonoBehaviour
     {
         LocomotionAnimation();
 
-        // 입력 받기
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        // 현재 위치
-        Vector3 currentPosition = transform.position;
-
-        // 목표 위치 계산 (이동 방향 비정규화 유지)
         Vector3 moveDirection = new Vector3(horizontal, 0f, vertical);
-        Vector3 targetPosition = currentPosition + moveDirection * speed * Time.fixedDeltaTime;
 
-        // 부드럽게 목표 위치로 이동
-        rb.MovePosition(Vector3.MoveTowards(currentPosition, targetPosition, speed * Time.fixedDeltaTime));
+        rb.AddForce(moveDirection * speed - rb.linearVelocity, ForceMode.VelocityChange);
     }
 
 
     private void LocomotionAnimation()
     {
-        // WASD 입력값을 받아서 속도 계산
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         float speedForAni = new Vector2(horizontal, vertical).magnitude;
 
-        // Animator에 속도 전달
         animator.SetFloat("Speed", speedForAni);
     }
 
@@ -117,7 +107,6 @@ public class Player : MonoBehaviour
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        // 월드의 바닥면과 평면 정의 (Y축 기준)
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
 
         float enter;
@@ -134,7 +123,6 @@ public class Player : MonoBehaviour
         {
             power = 0;
             GameManagerForGameScene.instance.GameEnded();
-            // 게임오버
         }
         else
         {
@@ -156,7 +144,6 @@ public class Player : MonoBehaviour
         StartCoroutine(AudioManager.instance.ShotgunShallDrop());
 
         yield return new WaitForSeconds(0.5f);
-        Debug.Log("샷건 준비됨");
         fireCoroutine = null;
     }
 
@@ -177,13 +164,12 @@ public class Player : MonoBehaviour
 
     private void FireBulletCase()
     {
-        Debug.Log("탄피 떨어짐");
         Instantiate(bulletCase, blaster.transform.position, Quaternion.identity);
     }
 
     public void PowerUp()
     {
-        int randomWindow = Random.Range(1, 10);
+        int randomWindow = Random.Range(3, 10);
         power += randomWindow;
     }
 
@@ -191,7 +177,6 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump") && power >= 10)
         {
-            Debug.Log("스페이스바 눌림");
             Damaged();
             Instantiate(mine, transform.position, Quaternion.Euler(0, 0, 90));
         }
